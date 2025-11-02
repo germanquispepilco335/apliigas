@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diseño en Implementación de GAS</title>
+  <style>
+    :root {
+      --primary: #34a853; /* Verde de Google Workspace */
+      --secondary: #4285f4; /* Azul */
+      --light: #f8f9fa;
+      --dark: #202124;
+      --gray: #5f6368;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      line-height: 1.7;
+      color: var(--dark);
+      background-color: #fafafa;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      background: white;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      color: var(--secondary);
+      margin: 1.2rem 0 0.6rem;
+    }
+
+    p, li {
+      margin-bottom: 1rem;
+      color: var(--gray);
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .step-card {
+      flex: 1 1 220px;
+      background: #e8f5e9;
+      border-left: 4px solid var(--primary);
+      padding: 1.2rem;
+      border-radius: 6px;
+    }
+
+    .step-card h4 {
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    pre {
+      background: #f1f3f4;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: var(--light);
+      color: var(--gray);
+      font-size: 0.95rem;
+      border-top: 1px solid #eee;
+    }
+
+    a {
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Diseño en Implementación de GAS</h1>
+    <p>Estrategias, buenas prácticas y arquitectura para soluciones eficaces con Google Apps Script</p>
+  </header>
+
+  <div class="container">
+    <section>
+      <h2>Introducción</h2>
+      <p>
+        La <strong>implementación de Google Apps Script (GAS)</strong> no se trata solo de escribir código funcional, sino de <em>diseñar soluciones pensadas desde la necesidad del usuario, la escalabilidad y la mantenibilidad</em>. 
+        Un buen diseño previo reduce errores, mejora la experiencia y facilita futuras actualizaciones.
+      </p>
+    </section>
+
+    <section>
+      <h2>Fases del Diseño en Implementación de GAS</h2>
+      <div class="steps">
+        <div class="step-card">
+          <h4>1. Análisis de Requisitos</h4>
+          <p>Identificar objetivos, usuarios, integraciones (Sheets, Gmail, etc.) y restricciones (cuotas, permisos).</p>
+        </div>
+        <div class="step-card">
+          <h4>2. Arquitectura del Script</h4>
+          <p>Definir funciones modulares, flujo de datos, uso de triggers y separación de lógica (UI vs lógica de negocio).</p>
+        </div>
+        <div class="step-card">
+          <h4>3. Prototipado</h4>
+          <p>Crear versiones mínimas funcionales (MVP) para validar conceptos antes de escalar.</p>
+        </div>
+        <div class="step-card">
+          <h4>4. Implementación</h4>
+          <p>Codificación con buenas prácticas: nombres claros, comentarios, manejo de errores y pruebas unitarias.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Buenas Prácticas de Diseño</h2>
+      <ul>
+        <li><strong>Modularidad:</strong> Separa funciones por responsabilidad (ej: <code>enviarCorreo()</code>, <code>leerHoja()</code>).</li>
+        <li><strong>Manejo de errores:</strong> Usa bloques <code>try...catch</code> para evitar fallos silenciosos.</li>
+        <li><strong>Documentación:</strong> Comenta tu código y crea un README si compartes el proyecto.</li>
+        <li><strong>Respeto a cuotas:</strong> Diseña para minimizar llamadas a APIs y evitar exceder límites de ejecución.</li>
+        <li><strong>Seguridad:</strong> Nunca almacenes credenciales en el código; usa propiedades del proyecto o servicios autorizados.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ejemplo: Diseño de un Sistema de Notificaciones Automáticas</h2>
+      <h3>Escenario</h3>
+      <p>Notificar por correo cuando una celda en Google Sheets cambie a "PENDIENTE".</p>
+
+      <h3>Diseño previo</h3>
+      <ul>
+        <li>Trigger: <code>onEdit</code> (evento de edición)</li>
+        <li>Validación: solo actuar si la columna es la correcta y el valor es "PENDIENTE"</li>
+        <li>Acción: enviar correo usando <code>GmailApp</code></li>
+        <li>Registro: guardar log en otra hoja para auditoría</li>
+      </ul>
+
+      <h3>Código implementado</h3>
+      <pre><code>function onEdit(e) {
+  const range = e.range;
+  const sheet = range.getSheet();
+  const value = e.value;
+
+  // Solo actuar en la hoja "Tareas" y columna B
+  if (sheet.getName() !== "Tareas" || range.getColumn() !== 2) return;
+
+  if (value === "PENDIENTE") {
+    try {
+      const email = "notificaciones@empresa.com";
+      const subject = "Nueva tarea pendiente";
+      const body = `La tarea en la fila ${range.getRow()} está pendiente.`;
+      GmailApp.sendEmail(email, subject, body);
+      
+      // Registrar en log
+      const logSheet = SpreadsheetApp.getActive().getSheetByName("Log");
+      logSheet.appendRow([new Date(), "Correo enviado", range.getRow()]);
+    } catch (error) {
+      console.error("Error en notificación:", error);
+    }
+  }
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Herramientas de Apoyo al Diseño</h2>
+      <ul>
+        <li><strong>Editor de Apps Script:</strong> Depurador integrado, autocompletado y logs.</li>
+        <li><strong>Clasp (Command Line Apps Script Projects):</strong> Permite desarrollar localmente con Git.</li>
+        <li><strong>Google Cloud Console:</strong> Para proyectos avanzados con APIs externas o OAuth.</li>
+        <li><strong>Plantillas de arquitectura:</strong> Usa patrones como MVC ligero o servicios modulares.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>
+    <p>Diseño en Implementación de GAS &copy; 2025 | Soluciones automatizadas con Google Workspace</p>
+    <p>Documentación oficial: <a href="https://developers.google.com/apps-script" target="_blank">Google Apps Script Guide</a></p>
+  </footer>
+
+</body>
+</html>
